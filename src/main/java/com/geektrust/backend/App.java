@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class App {
-
+  //chmod + x ./gradlew
   //./gradlew run --args="INPUT_FILE=input.txt"
 
   public static void main(String[] args) {

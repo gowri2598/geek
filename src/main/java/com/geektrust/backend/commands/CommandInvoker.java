@@ -15,7 +15,7 @@ public class CommandInvoker {
     }
 
     // Get the registered Command
-    private ICommand get(String commandName){
+    ICommand get(String commandName){
         return commandMap.get(commandName);
     }
 

@@ -15,7 +15,7 @@ import com.geektrust.backend.services.IPassengerService;
 import com.geektrust.backend.services.IRevenueService;
 import com.geektrust.backend.services.MetroCardService;
 import com.geektrust.backend.services.PassengerService;
-import com.geektrust.backend.services.RevenueService;
+import com.geektrust.backend.services.RevenueServiceTest;
 
 public class ApplicationConfig {
 
@@ -35,7 +35,7 @@ public class ApplicationConfig {
     revenueRepository,
     metroCardService
   );
-  private final IRevenueService revenueService = new RevenueService(
+  private final IRevenueService revenueService = new RevenueServiceTest(
     passengerService
   );
 

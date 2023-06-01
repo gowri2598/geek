@@ -1,54 +1,54 @@
 package com.geektrust.backend.commands;
 
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.times;
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
+import com.geektrust.backend.commands.CheckInCommand;
 import com.geektrust.backend.exceptions.CardNumberNotFoundException;
-import com.geektrust.backend.services.MetroCardService;
-import org.junit.jupiter.api.Assertions;
+import com.geektrust.backend.services.IMetroCardService;
+import com.geektrust.backend.services.IPassengerService;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
+import java.util.ArrayList;
+import java.util.List;
 
+class CheckInCommandTest {
 
-@DisplayName("CheckInCommandTest")
-@ExtendWith(MockitoExtension.class)
-
-public class CheckInCommandTest {
-    private final PrintStream standardOut = System.out;
-    private final ByteArrayOutputStream outputStreamCaptor = new ByteArrayOutputStream();
+    @Mock
+    private IMetroCardService metroCardService;
     
     @Mock
-    MetroCardService metroCardServiceMock;
+    private IPassengerService passengerService;
 
-    @InjectMocks
-    CheckInCommand checkInCommand;
+    private CheckInCommand checkInCommand;
 
+    
+    @ExtendWith(MockitoExtension.class)
     @BeforeEach
-    public void setUp() {
-        System.setOut(new PrintStream(outputStreamCaptor));
+    void setUp() {
+     
+        checkInCommand = new CheckInCommand(metroCardService, passengerService);
     }
 
     @Test
-    @DisplayName("execute method of CheckInCommand Should Print Error Message To Console If Card Not Found")
-    public void execute_ShouldPrintErrorMessage_GivenCardNotFound() {
-        //Arrange
-        String cardNum = "1";
-        String expectedOutput = "Cannot check in. card num:"+ cardNum +" not found!";
-        doThrow(new CardNumberNotFoundException(expectedOutput)).when(metroCardServiceMock).attendContest(contestId,"Joey");
+    void execute_ShouldCheckInPassenger_WhenValidTokensProvided() {
+        // Arrange
+        List<String> tokens = new ArrayList<>();
+        tokens.add("command");  // Assuming there is a specific command token
+        tokens.add("cardNumber");
+        tokens.add("passengerName");
+        tokens.add("destination");
 
-        //Act
-        checkInCommand.execute(List.of("ATTEND-CONTEST",cardNum,"Joey"));
+        // Act
+        checkInCommand.execute(tokens);
 
-        //Assert
-        Assertions.assertEquals(expectedOutput, outputStreamCaptor.toString().trim());
+        // Assert
+        Mockito.verify(passengerService).checkInPassenger("cardNumber", "passengerName", "destination");
+        // Here, you would need to replace "checkInPassenger" with the actual method name in IPassengerService
+        // and provide the appropriate arguments based on your implementation.
 
-        verify(userServiceMock,times(1)).attendContest(contestId,"Joey");
+        // Additionally, you can assert any other expected behavior or conditions based on your implementation.
     }
-
 }
